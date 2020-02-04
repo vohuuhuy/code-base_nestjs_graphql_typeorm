@@ -22,10 +22,18 @@
   "dependencies": {
     "@nestjs/common": "^6.10.14",
     "@nestjs/core": "^6.10.14",
+    "@nestjs/graphql": "^6.5.4",
     "@nestjs/platform-express": "^6.10.14",
+    "@nestjs/typeorm": "^6.2.0",
+    "@types/mongodb": "^3.3.15",
+    "apollo-server-express": "^2.9.16",
+    "graphql": "^14.6.0",
+    "graphql-tools": "^4.0.6",
+    "mongodb": "^3.5.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "typeorm": "^0.2.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.13.2",
