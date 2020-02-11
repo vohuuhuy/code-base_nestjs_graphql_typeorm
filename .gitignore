@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# schema
+/src/graphql.schema.ts
+
 # Logs
 logs
 *.log

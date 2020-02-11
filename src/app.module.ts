@@ -3,25 +3,34 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { join } from 'path'
+import { UserModule } from './modules/user/user.module'
 
 @Module({
   imports: [
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
-      playground: true
+      playground: true,
+      // definitions: {
+      //   path: join(process.cwd(), 'src/graphql.schema.ts'),
+      //   outputAs: 'class'
+      // }
     }),
     TypeOrmModule.forRoot({
+      name: 'mainDb',
       type: 'mongodb',
-      host: '35.222.185.187',
-      port: 27017,
+      host: 'localhost',
+      port: 15339,
       database: 'tqcSocial',
       // url: '',
       useNewUrlParser: true,
-      entities: [join(__dirname, '**/**.entity{.ts,.js}')],
-      synchronize: true,
-      logging: true
-    })
+      entities: ['@src/entities/**.entity{.ts,.js}'],
+      // logging: true,
+      username: '',
+      password: '',
+      keepConnectionAlive: true,
+      synchronize: true
+    }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
