@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common'
+import { Module, HttpModule } from '@nestjs/common'
+import { UserResolve } from './user.resolve';
 
 @Module({
-  imports: [],
-  providers: [],
-  exports: []
+  imports: [HttpModule],
+  providers: [UserResolve]
 })
 export class UserModule {}

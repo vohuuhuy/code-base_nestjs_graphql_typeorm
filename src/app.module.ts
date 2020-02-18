@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './modules/user/user.module'
@@ -8,12 +6,23 @@ import { UserModule } from './modules/user/user.module'
 @Module({
   imports: [
     GraphQLModule.forRoot({
+      path: '/graphqlTqcSocial',
       typePaths: ['./**/*.graphql'],
       playground: true,
       // definitions: {
       //   path: join(process.cwd(), 'src/graphql.schema.ts'),
       //   outputAs: 'class'
       // }
+      installSubscriptionHandlers: true,
+      subscriptions: {
+        path: '/graphqlTqcSocial',
+      },
+      context: (({ req }) => {
+        const token = req.headers.authorization || ''
+        if (token) {
+        } else {
+        }
+      })
     }),
     TypeOrmModule.forRoot({
       name: 'mainDb',
@@ -32,7 +41,7 @@ import { UserModule } from './modules/user/user.module'
     }),
     UserModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
