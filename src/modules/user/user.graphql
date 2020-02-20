@@ -1,5 +1,9 @@
 type Query {
-  getUser(userId: ID): User
+  login(username: String!, password: String!): ResultLogin
+}
+
+type Mutation {
+  createUser(username: String!, password: String!, firstname: String!, lastname: String!): User
 }
 
 type User {
@@ -8,8 +12,10 @@ type User {
   password: String
   firstname: String
   lastname: String
-}
-
-type Mutation {
-  createUser(username: String!, password: String!, firstname: String!, lastname: String!): User
+  email: String
+  profileId: String
+  isEnabled: Boolean
+  sessionId: String
+  createdAt: Float
+  updatedAt: Float
 }

@@ -27,12 +27,6 @@ export class User {
   profileId: string
 
   @Column()
-  retainId: string
-
-  @Column()
-  idDoctor: string
-
-  @Column()
   isEnabled: boolean
 
   @Column()

@@ -1,0 +1,4 @@
+type ResultLogin {
+  token: String
+  hasUsername: Boolean
+}
