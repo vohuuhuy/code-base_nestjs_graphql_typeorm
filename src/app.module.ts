@@ -53,7 +53,8 @@ import { getMongoRepository } from 'typeorm'
       username: '',
       password: '',
       keepConnectionAlive: true,
-      synchronize: true
+      synchronize: true,
+      useUnifiedTopology: true
     }),
     UserModule
   ],
