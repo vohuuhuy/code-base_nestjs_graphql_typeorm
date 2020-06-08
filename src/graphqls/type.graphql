@@ -1,11 +1,3 @@
-type Query {
-  login(username: String!, password: String!): ResultLogin
-}
-
-type Mutation {
-  createUser(username: String!, password: String!, firstname: String!, lastname: String!): User
-}
-
 type User {
   _id: String
   username: String
