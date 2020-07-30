@@ -7,63 +7,74 @@ import * as Bcrypt from 'bcrypt'
 import { v1 as uuidv1 } from 'uuid'
 import * as jsonWebToken from 'jsonwebtoken'
 import { UserEntity } from 'entities/user.entity'
-import { User } from 'graphql.schema'
+import { User, InputUser, ResultLogin } from 'graphql.schema'
 const moment = require('moment')
 
 @Resolver('User')
 export class UserResolve {
-  @Mutation('createUser')
-  async createUser (
-    @Args() args
-  ): Promise<User | any> {
+  @Query('users')
+  async users(): Promise<User[] | ApolloError> {
     try {
-      const { username, password, firstname, lastname } = args
-      const userExisted = await getMongoRepository(UserEntity).findOne({
-        where: {
-          username,
-          isEnabled: true
-        }
-      })
-      if (userExisted) {
-        throw new ApolloError('user existed', '404')
-      }
-      const passHashByCryptoJS = await CryptoJS.SHA256(password).toString()
-      const passHashByBrypt = await Bcrypt.hashSync(passHashByCryptoJS, R.Variables.JSON_SALTROUND)
-      await getMongoRepository(UserEntity).insertOne({
-        _id: uuidv1(),
-        username,
-        password: passHashByBrypt,
-        firstname,
-        lastname,
-        isEnabled: true,
-        createdAt: moment().valueOf()
-      })
-      return { username }
+      return await getMongoRepository(UserEntity).find({})
     } catch (error) {
       throw new ApolloError(error)
     }
   }
 
-  @Query('login')
-  async login(@Args() args) {
+  @Mutation('login')
+  async login(@Args() args): Promise<ResultLogin> {
     try {
-      const { username, password } = args
+      const { userName, password } = args
       const userExisted = await getMongoRepository(UserEntity).findOne({
-        username,
-        isEnabled: true
+        userName,
+        isBlock: false
       })
-      if (!userExisted) return
+      if (!userExisted) throw new ApolloError('userName not found')
       const passHashByCryptoJS = await CryptoJS.SHA256(password).toString()
       const checkPassword = await Bcrypt.compare(passHashByCryptoJS, userExisted.password)
-      if (!checkPassword) return
+      if (!checkPassword) throw new ApolloError('password not success')
       return {
-        token: await jsonWebToken.sign(
+        authorization: await jsonWebToken.sign(
           {
             userId: userExisted._id
           },
           R.Variables.JSON_SECRETKEY
-        )
+        ),
+        user: userExisted
       }
+    } catch (error) {
+      throw new ApolloError(error)
+    }
+  }
+
+  @Mutation('register')
+  async register(@Args('inputUser') inputUser: InputUser): Promise<User | ApolloError> {
+    try {
+      const { firstName, lastName, userName, email, password } = inputUser
+      const userExisted = await getMongoRepository(UserEntity).findOne({
+        userName,
+        isBlock: false
+      })
+      const emailExisted = await getMongoRepository(UserEntity).findOne({
+        email,
+        isBlock: false
+      })
+      if (userExisted) throw new ApolloError('userName existed')
+      if (emailExisted) throw new ApolloError('email existed')
+      const passHashByCryptoJS = await CryptoJS.SHA256(password).toString()
+      const passHashByBrypt = await Bcrypt.hashSync(passHashByCryptoJS, R.Variables.JSON_SALTROUND)
+      const user = new UserEntity({
+        _id: uuidv1(),
+        password: passHashByBrypt,
+        firstName,
+        lastName,
+        userName,
+        email,
+        isBlock: false,
+        createdAt: moment().valueOf()
+      })
+      await getMongoRepository(UserEntity).insertOne(user)
+      return user
     } catch (error) {
       throw new ApolloError(error)
     }

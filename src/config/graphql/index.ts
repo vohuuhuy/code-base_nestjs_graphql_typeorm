@@ -20,12 +20,12 @@ const Graphql: GqlModuleAsyncOptions = {
       const token = req.headers.authorization || ''
       if (token) {
         const { userId } = jsonWebToken.verify(token, R.Variables.JSON_SECRETKEY)
-        if (!userId) throw new AuthenticationError('authentication failed')
-        currentUser = await getMongoRepository(UserEntity).findOne({
-          _id: userId,
-          isEnabled: true
-        })
-        if (!currentUser) throw new AuthenticationError('authentication failed')
+        if (userId) {
+          currentUser = await getMongoRepository(UserEntity).findOne({
+            _id: userId,
+            isBlock: false
+          })
+        }
       }
       return { currentUser }
     },

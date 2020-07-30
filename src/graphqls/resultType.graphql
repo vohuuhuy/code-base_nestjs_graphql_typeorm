@@ -1,3 +1,9 @@
 type ResultLogin {
-  token: String
+  authorization: String
+  user: User
+}
+
+type CreatedByUser {
+  _id: String
+  fullName: String
 }

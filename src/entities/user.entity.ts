@@ -6,37 +6,28 @@ export class UserEntity {
   _id: string
 
   @Column()
-  imageUrl: string
+  email: string
 
   @Column()
-  username: string
+  userName: string
 
   @Column()
   password: string
 
   @Column()
-  firstname: string
+  firstName: string
 
   @Column()
-  lastname: string
+  lastName: string
 
   @Column()
-  email: string
-
-  @Column()
-  profileId: string
-
-  @Column()
-  isEnabled: boolean
-
-  @Column()
-  sessionId: string
+  isBlock: boolean
 
   @Column()
   createdAt: number
 
   @Column()
-  updatedAt: number
+  createdBy: string
 
   constructor(user: any) {
     if (user) {

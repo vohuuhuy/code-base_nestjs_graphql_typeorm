@@ -1,7 +1,8 @@
 type Query {
-  login(username: String!, password: String!): ResultLogin
+  users: [User] @authen
 }
 
 type Mutation {
-  createUser(username: String!, password: String!, firstname: String!, lastname: String!): User @authen
+  login(userName: String!, password: String!): ResultLogin
+  register(inputUser: InputUser!): User
 }
