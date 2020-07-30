@@ -10,7 +10,7 @@ const Graphql: GqlModuleAsyncOptions = {
   useFactory: () => ({
     path: R.Variables.GRAPHQL_PATH,
     typePaths: ['./**/*.graphql'],
-    playground: true,
+    playground: R.Variables.SYS_MODE === 'dev',
     installSubscriptionHandlers: true,
     subscriptions: {
       path: R.Variables.GRAPHQL_SUB_PATH,

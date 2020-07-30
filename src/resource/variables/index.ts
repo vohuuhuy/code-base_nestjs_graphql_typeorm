@@ -4,7 +4,7 @@ dotenv.config()
 
 // system
 export const SYS_MODE = process.env.SYS_MODE || 'dev'
-export const PORT = process.env.PORT || 'dev'
+export const PORT = process.env.PORT || 3001
 
 // type orm
 export const ORM_DB_HOST = process.env.ORM_HOST || 'localhost'
