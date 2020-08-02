@@ -30,8 +30,7 @@ export class UserResolve {
         isBlock: false
       })
       if (!userExisted) throw new ApolloError('userName not found')
-      const passHashByCryptoJS = await CryptoJS.SHA256(password).toString()
-      const checkPassword = await Bcrypt.compare(passHashByCryptoJS, userExisted.password)
+      const checkPassword = await Bcrypt.compare(password, userExisted.password)
       if (!checkPassword) throw new ApolloError('password not success')
       return {
         authorization: await jsonWebToken.sign(
