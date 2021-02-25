@@ -4,5 +4,5 @@ type Query {
 
 type Mutation {
   login(userName: String!, password: String!): ResultLogin
-  register(inputUser: InputUser!): User
+  register(inputUser: InputUser!): Boolean
 }

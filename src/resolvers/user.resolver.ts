@@ -47,9 +47,10 @@ export class UserResolve {
   }
 
   @Mutation('register')
-  async register(@Args('inputUser') inputUser: InputUser): Promise<User | ApolloError> {
+  async register(@Args('inputUser') inputUser: InputUser): Promise<boolean | ApolloError> {
     try {
       const { firstName, lastName, userName, email, password } = inputUser
+
       const userExisted = await getMongoRepository(UserEntity).findOne({
         userName,
         isBlock: false
@@ -58,22 +59,27 @@ export class UserResolve {
         email,
         isBlock: false
       })
+
       if (userExisted) throw new ApolloError('userName existed')
       if (emailExisted) throw new ApolloError('email existed')
+
       const passHashByCryptoJS = await CryptoJS.SHA256(password).toString()
       const passHashByBrypt = await Bcrypt.hashSync(passHashByCryptoJS, R.Variables.JSON_SALTROUND)
-      const user = new UserEntity({
-        _id: uuidv1(),
-        password: passHashByBrypt,
-        firstName,
-        lastName,
-        userName,
-        email,
-        isBlock: false,
-        createdAt: moment().valueOf()
-      })
-      await getMongoRepository(UserEntity).insertOne(user)
-      return user
+
+      await getMongoRepository(UserEntity).insertOne(
+        new UserEntity({
+          _id: uuidv1(),
+          password: passHashByBrypt,
+          firstName,
+          lastName,
+          userName,
+          email,
+          isBlock: false,
+          createdAt: moment().valueOf()
+        })
+      )
+
+      return true
     } catch (error) {
       throw new ApolloError(error)
     }
